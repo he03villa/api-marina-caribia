@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BoletaServicioController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -27,3 +28,14 @@ Route::group([
     Route::get('/{boleta}/pdf', [BoletaServicioController::class, 'descargarPdf']);
     Route::post('/', [BoletaServicioController::class, 'save'])->middleware(['validarCrearBolanteServicio']);
 });
+
+Route::group([
+    'prefix' => 'users'
+],function () {
+    Route::get('/', [UserController::class, 'index']);
+    Route::post('/save', [UserController::class, 'save'])->middleware(['validarCrearUser']);
+    Route::get('/me', [UserController::class, 'me'])->middleware(['auth:api']);
+});
+
+
+Route::post('/login', [UserController::class, 'login'])->middleware(['validarLogin']);

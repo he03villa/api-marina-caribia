@@ -31,7 +31,9 @@ class BoletaServicioDao
 
     public function createBoletaServicio($data)
     {
-        return BoletaServicio::create($data);
+        $boleta = BoletaServicio::create($data);
+        $boleta->trabajadores()->sync($data['trabajadores']);
+        return $boleta;
     }
 
     public function getBoletaServiciosFilter()

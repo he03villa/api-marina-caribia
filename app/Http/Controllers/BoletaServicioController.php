@@ -8,6 +8,7 @@ use App\Dao\LanchasDao;
 use App\Dao\MotoNavesDao;
 use App\Dao\PilotosDao;
 use App\Dao\ServiciosDao;
+use App\Dao\TrabajadoresDao;
 use App\Models\BoletaServicio;
 use App\Models\PuertoOrDestino;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -24,6 +25,7 @@ class BoletaServicioController extends Controller
     protected $_PilotosDao;
     protected $_ServiciosDao;
     protected $_BoletaServicioDao;
+    protected $_TrabajadoresDao;
 
     /**
      * Inicializa los objetos de acceso a datos necesarios para
@@ -36,7 +38,7 @@ class BoletaServicioController extends Controller
      * @param ServiciosDao $ServiciosDao
      * @param BoletaServicioDao $BoletaServicioDao
      */
-    public function __construct(AgenciasDao $AgenciasDao, LanchasDao $LanchasDao, MotoNavesDao $MotoNavesDao, PilotosDao $PilotosDao, ServiciosDao $ServiciosDao, BoletaServicioDao $BoletaServicioDao)
+    public function __construct(AgenciasDao $AgenciasDao, LanchasDao $LanchasDao, MotoNavesDao $MotoNavesDao, PilotosDao $PilotosDao, ServiciosDao $ServiciosDao, BoletaServicioDao $BoletaServicioDao, TrabajadoresDao $TrabajadoresDao)
     {
         $this->_AgenciasDao = $AgenciasDao;
         $this->_LanchasDao = $LanchasDao;
@@ -44,6 +46,7 @@ class BoletaServicioController extends Controller
         $this->_PilotosDao = $PilotosDao;
         $this->_ServiciosDao = $ServiciosDao;
         $this->_BoletaServicioDao = $BoletaServicioDao;
+        $this->_TrabajadoresDao = $TrabajadoresDao;
     }
 
     /**
@@ -58,8 +61,24 @@ class BoletaServicioController extends Controller
         $pilotos = $this->_PilotosDao->getPilotosActivas();
         $puertosDestinos = PuertoOrDestino::where('estado', 'Activo')->get();
         $servicios = $this->_ServiciosDao->getServiciosActivos();
-        
-        return response()->json(['agencias' => $agencias, 'lanchas' => $lanchas, 'motoNaves' => $motoNaves, 'pilotos' => $pilotos, 'puertosDestinos' => $puertosDestinos, 'servicios' => $servicios], 200);
+        $trabajador = $this->_TrabajadoresDao->getTrabajadorFilter();
+        $trabajador = $trabajador->map(function ($trabajador) {
+            return [
+                'id' => $trabajador->id,
+                'nombres' => $trabajador->nombre,
+                'cargo' => $trabajador->cargo->nombre
+            ];
+        });
+
+        return response()->json([
+            'agencias' => $agencias, 
+            'lanchas' => $lanchas, 
+            'motoNaves' => $motoNaves, 
+            'pilotos' => $pilotos, 
+            'puertosDestinos' => $puertosDestinos, 
+            'servicios' => $servicios, 
+            'trabajador' => $trabajador
+        ], 200);
     }
 
     /**

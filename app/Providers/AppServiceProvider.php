@@ -9,6 +9,8 @@ use App\Dao\MotoNavesDao;
 use App\Dao\PilotosDao;
 use App\Dao\PuertoOrDestinoDao;
 use App\Dao\ServiciosDao;
+use App\Dao\TrabajadoresDao;
+use App\Dao\UserDao;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -26,6 +28,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(ServiciosDao::class);
         $this->app->singleton(PuertoOrDestinoDao::class);
         $this->app->singleton(BoletaServicioDao::class);
+        $this->app->singleton(UserDao::class);
+        $this->app->singleton(TrabajadoresDao::class);
     }
 
     /**

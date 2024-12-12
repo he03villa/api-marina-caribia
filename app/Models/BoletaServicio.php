@@ -49,6 +49,10 @@ class BoletaServicio extends Model
         return $this->belongsTo(MotoNaves::class, 'moto_nave');
     }
 
+    public function trabajadores(){
+        return $this->belongsToMany(Trabajador::class);
+    }
+
     public function diasOrdenados()
     {
         $fechaInicio = date_create(date('Y-m-d'));
