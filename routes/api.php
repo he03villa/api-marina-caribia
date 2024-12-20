@@ -27,6 +27,7 @@ Route::group([
     Route::get('/lista', [BoletaServicioController::class, 'getBoletasServicios']);
     Route::get('/{boleta}/pdf', [BoletaServicioController::class, 'descargarPdf']);
     Route::post('/', [BoletaServicioController::class, 'save'])->middleware(['validarCrearBolanteServicio']);
+    Route::put('/{id}', [BoletaServicioController::class, 'update'])->middleware(['validarCambioEstado']);
 });
 
 Route::group([

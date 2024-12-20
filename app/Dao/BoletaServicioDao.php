@@ -36,8 +36,75 @@ class BoletaServicioDao
         return $boleta;
     }
 
-    public function getBoletaServiciosFilter()
+    public function getBoletaServiciosFilter($filtro = null)
     {
-        return BoletaServicio::orderBy('id', 'desc')->get();
+        $buscar = "";
+        $lancha = "";
+        $destino = "";
+        $piloto = "";
+        $motoNave = "";
+        $servicio = "";
+        $estado = "";
+        $fechaInicio = "";
+        $fechaFinal = "";
+        if ($filtro) {
+            $buscar = $filtro['buscar'] ?? "";
+            $lancha = $filtro['lancha'] ?? "";
+            $destino = $filtro['destino'] ?? "";
+            $piloto = $filtro['piloto'] ?? "";
+            $motoNave = $filtro['motoNave'] ?? "";
+            $servicio = $filtro['servicio'] ?? "";
+            $estado = $filtro['estado'] ?? "";
+            $fechaInicio = $filtro['fecha_salida'] ?? "";
+            $fechaFinal = $filtro['fecha_regreso'] ?? "";
+        }
+        $boletaServicios = BoletaServicio::query();
+        if ($buscar != '') {
+            $boletaServicios = $boletaServicios->whereHas('embarcaciones', function ($query) use ($buscar) {
+                                    $query->where('nombre', 'like', '%' . $buscar . '%');
+                                })
+                                ->orWhereHas('destinos', function ($query) use ($buscar) {
+                                    $query->where('nombre', 'like', '%' . $buscar . '%');
+                                })
+                                ->orWhereHas('pilotos', function ($query) use ($buscar) {
+                                    $query->where('nombre', 'like', '%' . $buscar . '%');
+                                })
+                                ->orWhereHas('motonaves', function ($query) use ($buscar) {
+                                    $query->where('nombre', 'like', '%' . $buscar . '%');
+                                })
+                                ->orWhereHas('servicios', function ($query) use ($buscar) {
+                                    $query->where('nombre', 'like', '%' . $buscar . '%');
+                                })
+                                ->orWhere('estado', 'like', '%' . $buscar . '%');
+        }
+        if ($lancha != '') {
+            $boletaServicios = $boletaServicios->where('embarcacion', $lancha);
+        }
+        if ($destino != '') {
+            $boletaServicios = $boletaServicios->where('destino', $destino);
+        }
+        if ($piloto != '') {
+            $boletaServicios = $boletaServicios->where('piloto', $piloto);
+        }
+        if ($motoNave != '') {
+            $boletaServicios = $boletaServicios->where('embarcacion', $motoNave);
+        }
+        if ($servicio != '') {
+            $boletaServicios = $boletaServicios->where('servicio', $servicio);
+        }
+        if ($estado != '') {
+            $boletaServicios = $boletaServicios->where('estado', $estado);
+        }
+        if ($fechaInicio != '') {
+            $boletaServicios = $boletaServicios->whereDate('fecha_inicio', '=', $fechaInicio);
+        }
+        if ($fechaFinal != '') {
+            $boletaServicios = $boletaServicios->whereDate('fecha_final', '=', $fechaFinal);
+        }
+        if ($fechaInicio != '' && $fechaFinal != '') {
+            $boletaServicios = $boletaServicios->whereDate('fecha_inicio', '>=', $fechaInicio)->whereDate('fecha_final', '<=', $fechaFinal);
+        }
+        $boletaServicios = $boletaServicios->orderBy('id', 'desc')->get();
+        return $boletaServicios;
     }
 }

@@ -99,8 +99,28 @@ class BoletaServicioController extends Controller
         return response()->json($dataRegistro, 200);
     }
 
-    public function getBoletasServicios() {
-        $arrayBoletasServicios = $this->_BoletaServicioDao->getBoletaServiciosFilter();
+    public function getBoletasServicios(Request $request) {
+        $lancha = $request->get('lancha');
+        $destino = $request->get('destino');
+        $piloto = $request->get('piloto');
+        $motoNave = $request->get('motoNave');
+        $servicio = $request->get('servicio');
+        $estado = $request->get('estado');
+        $buscar = $request->get('buscar');
+        $fecha_salida = $request->get('fecha_salida');
+        $fecha_regreso = $request->get('fecha_regreso');
+        $filtro = [
+            'lancha' => $lancha,
+            'destino' => $destino,
+            'piloto' => $piloto,
+            'motoNave' => $motoNave,
+            'servicio' => $servicio,
+            'estado' => $estado,
+            'buscar' => $buscar,
+            'fecha_regreso' => $fecha_regreso,
+            'fecha_salida' => $fecha_salida,
+        ];
+        $arrayBoletasServicios = $this->_BoletaServicioDao->getBoletaServiciosFilter($filtro);
         $dataBoletasServicios = $arrayBoletasServicios->map(function ($boletaServicio) {
             $salida = Carbon::createFromFormat('Y-m-d H:i:s', "$boletaServicio->fecha_inicio $boletaServicio->hora_inicio");
             $regreso = Carbon::createFromFormat('Y-m-d H:i:s', "$boletaServicio->fecha_final $boletaServicio->hora_final");
@@ -151,6 +171,15 @@ class BoletaServicioController extends Controller
             ->setPaper('a4', 'portrait')
             ->stream();
         }, Carbon::today() . '.pdf');
+    }
+
+    function update($id, Request $request) {
+        $req = $request->all();
+        $data = [
+            'estado' => $req['estado']
+        ];
+        $boleta = $this->_BoletaServicioDao->updateBoletaServicio($id, $data);
+        return response()->json($boleta, 200);
     }
     
 }
