@@ -52,4 +52,20 @@ class LanchasDao
         $lancha->delete();
         return $lancha;
     }
+
+    public function getLanchaByFiltro($filtro = null)
+    {
+        $buscar = "";
+        if ($filtro) {
+            $buscar = $filtro['buscar'] ?? "";
+        }
+        $lanchas = Lanchas::query();
+        if ($buscar != "") {
+            $lanchas = $lanchas->where('id_lancha', 'like', '%' . $buscar . '%')
+                              ->orWhere('nombre', 'like', '%' . $buscar . '%')
+                              ->orWhere('estado', 'like', '%' . $buscar . '%');
+        }
+        $lanchas = $lanchas->orderBy('id', 'desc')->get();
+        return $lanchas;
+    }
 }

@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Dao\AgenciasDao;
 use App\Dao\BoletaServicioDao;
+use App\Dao\ClienteDao;
 use App\Dao\LanchasDao;
 use App\Dao\MotoNavesDao;
 use App\Dao\PilotosDao;
@@ -30,6 +31,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(BoletaServicioDao::class);
         $this->app->singleton(UserDao::class);
         $this->app->singleton(TrabajadoresDao::class);
+        $this->app->singleton(ClienteDao::class);
     }
 
     /**

@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\BoletaServicioController;
+use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\LanchasController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -38,5 +40,22 @@ Route::group([
     Route::get('/me', [UserController::class, 'me'])->middleware(['auth:api']);
 });
 
+Route::group([
+    'prefix' => 'lanchas'
+], function () {
+    Route::get('/', [LanchasController::class, 'getLanchaByFiltro']);
+    Route::get('/{id}', [LanchasController::class, 'getLancha']);
+    Route::post('/', [LanchasController::class, 'createLancha'])->middleware(['validarCrearLancha']);
+    Route::put('/{id}', [LanchasController::class, 'updateLancha'])->middleware(['validarCrearLancha']);
+});
+
+Route::group([
+    'prefix' => 'clients'
+], function () {
+    Route::get('/', [ClienteController::class, 'getClienteByFiltro']);
+    Route::get('/{id}', [ClienteController::class, 'getCliente']);
+    Route::post('/', [ClienteController::class, 'createCliente'])->middleware(['validarCrearCliente']);
+    Route::put('/{id}', [ClienteController::class, 'updateCliente'])->middleware(['validarCrearCliente']);
+});
 
 Route::post('/login', [UserController::class, 'login'])->middleware(['validarLogin']);
