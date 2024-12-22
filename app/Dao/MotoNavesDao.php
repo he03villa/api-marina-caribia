@@ -69,4 +69,21 @@ class MotoNavesDao
         $motoNave->delete();
         return $motoNave;
     }
+
+    public function getMotoNaveByFilter($filtro)
+    {
+        $buscar = "";
+        if ($filtro) {
+            $buscar = $filtro['buscar'] ?? "";
+        }
+        $motoNaves = MotoNaves::query();
+        if ($buscar != "") {
+            $motoNaves = $motoNaves->where('id', 'like', '%' . $buscar . '%')
+                ->orWhere('nombre', 'like', '%' . $buscar . '%')
+                ->orWhere('id_moto_naves', 'like', '%' . $buscar . '%')
+                ->orWhere('estado', 'like', '%' . $buscar . '%');
+        }
+        $motoNaves = $motoNaves->orderBy('id', 'desc')->get();
+        return $motoNaves;
+    }
 }

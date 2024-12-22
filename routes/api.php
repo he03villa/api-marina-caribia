@@ -3,6 +3,7 @@
 use App\Http\Controllers\BoletaServicioController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\LanchasController;
+use App\Http\Controllers\MotoNaveController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -56,6 +57,15 @@ Route::group([
     Route::get('/{id}', [ClienteController::class, 'getCliente']);
     Route::post('/', [ClienteController::class, 'createCliente'])->middleware(['validarCrearCliente']);
     Route::put('/{id}', [ClienteController::class, 'updateCliente'])->middleware(['validarCrearCliente']);
+});
+
+Route::group([
+    'prefix' => 'motos_naves'
+], function () {
+    Route::get('/', [MotoNaveController::class, 'getMotoNaveByFilter']);
+    Route::get('/{id}', [MotoNaveController::class, 'getMotoNave']);
+    Route::post('/', [MotoNaveController::class, 'createMotoNave'])->middleware(['validarCrearMotoNave']);
+    Route::put('/{id}', [MotoNaveController::class, 'updateMotoNave'])->middleware(['validarCrearMotoNave']);
 });
 
 Route::post('/login', [UserController::class, 'login'])->middleware(['validarLogin']);
