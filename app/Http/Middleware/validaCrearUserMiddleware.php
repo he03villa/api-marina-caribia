@@ -20,7 +20,7 @@ class validaCrearUserMiddleware
             'email' => 'required|email|unique:users',
             'password' => 'required|confirmed|min:8',
             'name' => 'required|min:3|max:20',
-            'perfil' => 'required|in:Administrador,Operador',
+            'perfil' => 'required|in:Administrador,Operador,Operativo Tablet',
             'estado' => 'required|in:Activo,Inactivo',
         ], [
             'required' => 'El :attribute es requerido.',
