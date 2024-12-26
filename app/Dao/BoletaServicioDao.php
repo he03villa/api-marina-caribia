@@ -104,7 +104,7 @@ class BoletaServicioDao
         if ($fechaInicio != '' && $fechaFinal != '') {
             $boletaServicios = $boletaServicios->whereDate('fecha_inicio', '>=', $fechaInicio)->whereDate('fecha_final', '<=', $fechaFinal);
         }
-        $boletaServicios = $boletaServicios->orderBy('id', 'desc')->get();
+        $boletaServicios = $boletaServicios->orderBy('fecha_inicio', 'desc')->orderBy('hora_inicio', 'desc')->get();
         return $boletaServicios;
     }
 }
