@@ -12,6 +12,9 @@
             margin: 0;
             font-family: sans-serif;
             height: 100%;
+            background-image: url("{{ public_path('images/fondo.png') }}");
+            background-size: cover;
+            background-position: center;
         }
         .header {
             width: 100%;
@@ -89,7 +92,7 @@
             <label>NIT 900.061.576-6</label>
             <span>Operador portuario</span>
         </div>
-        <img src="{{ public_path('images/logo.jpeg') }}" alt="Logo Derecho">
+        <img src="{{ public_path('images/logo2.png') }}" alt="Logo Derecho">
     </div>
     <h1 class="title">{{ $title }} </h1>
 

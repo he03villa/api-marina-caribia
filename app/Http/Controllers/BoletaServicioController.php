@@ -168,7 +168,7 @@ class BoletaServicioController extends Controller
             )
             ->setOption('isHtml5ParserEnabled', true)
             ->setOption('isPhpEnabled', true)
-            ->setPaper('a4', 'portrait')
+            ->setPaper([0, 0, 595.28, 497.81], 'portrait')
             ->stream();
         }, Carbon::today() . '.pdf');
     }
