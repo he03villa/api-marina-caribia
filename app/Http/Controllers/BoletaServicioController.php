@@ -139,6 +139,7 @@ class BoletaServicioController extends Controller
                 'motonave' => $boletaServicio->motonaves ? $boletaServicio->motonaves->nombre : '',
                 'servicio' => $boletaServicio->servicios->nombre,
                 'estado' => $boletaServicio->estado,
+                'trabajadores' => $boletaServicio->trabajadores->map(fn ($trabajador) => $trabajador->nombre)->implode(', '),
                 'duracion' => $duracion
             ];
         });

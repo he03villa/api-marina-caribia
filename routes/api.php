@@ -1,9 +1,11 @@
 <?php
 
 use App\Http\Controllers\BoletaServicioController;
+use App\Http\Controllers\CargosController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\LanchasController;
 use App\Http\Controllers\MotoNaveController;
+use App\Http\Controllers\TrabajadoresController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -66,6 +68,22 @@ Route::group([
     Route::get('/{id}', [MotoNaveController::class, 'getMotoNave']);
     Route::post('/', [MotoNaveController::class, 'createMotoNave'])->middleware(['validarCrearMotoNave']);
     Route::put('/{id}', [MotoNaveController::class, 'updateMotoNave'])->middleware(['validarCrearMotoNave']);
+});
+
+Route::group([
+    'prefix' => 'cargos'
+], function () {
+    Route::get('/', [CargosController::class, 'index']);
+    //Route::get('/activos', [CargosController::class, 'cargosActivos']);
+});
+
+Route::group([
+    'prefix' => 'trabajadores'
+], function () {
+   Route::get('/', [TrabajadoresController::class, 'index']);
+   Route::get('/{id}', [TrabajadoresController::class, 'trabajador']);
+   Route::post('/', [TrabajadoresController::class, 'createTrabajador'])->middleware(['validarCrearTrabajador']);
+   Route::put('/{id}', [TrabajadoresController::class, 'updateTrabajador'])->middleware(['validarCrearTrabajador']);
 });
 
 Route::post('/login', [UserController::class, 'login'])->middleware(['validarLogin']);

@@ -36,6 +36,26 @@ class TrabajadoresDao
 
     public function getTrabajadorFilter()
     {
-        return Trabajador::with('cargo')->orderBy('nombre', 'asc')->get();
+        return Trabajador::with('cargo')->where('estado', 'Activo')->orderBy('nombre', 'asc')->get();
+    }
+
+    public function getTrabajadoresFilterEndPoint($filtro) {
+        $buscar = "";
+        if ($filtro) {
+            $buscar = $filtro['buscar'] ?? "";
+        }
+        $trabajadores = Trabajador::query();
+        if ($buscar != "") {
+            $trabajadores = $trabajadores->where('id', 'like', '%' . $buscar . '%')
+                ->orWhere('nombre', 'like', '%' . $buscar . '%')
+                ->orWhere('identificacion', 'like', '%' . $buscar . '%')
+                ->orWhere('sexo', 'like', '%' . $buscar . '%')
+                ->orWhere('estado', 'like', '%' . $buscar . '%')
+                ->orWhereHas('cargo', function ($query) use ($buscar) {
+                    $query->where('nombre', 'like', '%' . $buscar . '%');
+                });
+        }
+        $trabajadores = $trabajadores->with('cargo:id,nombre')->orderBy('id', 'desc')->get();
+        return $trabajadores;
     }
 }

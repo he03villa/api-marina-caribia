@@ -9,6 +9,14 @@ class Trabajador extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'nombre',
+        'identificacion',
+        'id_cargo',
+        'sexo',
+        'estado'
+    ];
+
     public function cargo()
     {
         return $this->belongsTo(Cargo::class, 'id_cargo');
