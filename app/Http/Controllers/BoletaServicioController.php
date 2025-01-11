@@ -139,6 +139,7 @@ class BoletaServicioController extends Controller
                 'motonave' => $boletaServicio->motonaves ? $boletaServicio->motonaves->nombre : '',
                 'servicio' => $boletaServicio->servicios->nombre,
                 'estado' => $boletaServicio->estado,
+                'facturacion' => $boletaServicio->facturacion,
                 'trabajadores' => $boletaServicio->trabajadores->map(fn ($trabajador) => $trabajador->nombre)->implode(', '),
                 'duracion' => $duracion
             ];
@@ -178,6 +179,15 @@ class BoletaServicioController extends Controller
         $req = $request->all();
         $data = [
             'estado' => $req['estado']
+        ];
+        $boleta = $this->_BoletaServicioDao->updateBoletaServicio($id, $data);
+        return response()->json($boleta, 200);
+    }
+
+    function updateFacturacion($id, Request $request) {
+        $req = $request->all();
+        $data = [
+            'facturacion' => $req['facturacion']
         ];
         $boleta = $this->_BoletaServicioDao->updateBoletaServicio($id, $data);
         return response()->json($boleta, 200);

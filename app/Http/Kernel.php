@@ -72,5 +72,6 @@ class Kernel extends HttpKernel
         'validarCrearCliente' => \App\Http\Middleware\validarCrarClienteMiddleware::class,
         'validarCrearMotoNave' => \App\Http\Middleware\validarCrearMotoNaveMiddleware::class,
         'validarCrearTrabajador' => \App\Http\Middleware\ValidarCreacionTabajadorMiddleware::class,
+        'validarCambioFacturacion' => \App\Http\Middleware\validarCambioFacturacion::class,
     ];
 }

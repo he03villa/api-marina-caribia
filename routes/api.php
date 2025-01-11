@@ -33,6 +33,7 @@ Route::group([
     Route::get('/{boleta}/pdf', [BoletaServicioController::class, 'descargarPdf']);
     Route::post('/', [BoletaServicioController::class, 'save'])->middleware(['validarCrearBolanteServicio']);
     Route::put('/{id}', [BoletaServicioController::class, 'update'])->middleware(['validarCambioEstado']);
+    Route::put('/{id}/facturacion', [BoletaServicioController::class, 'updateFacturacion'])->middleware(['validarCambioFacturacion']);
 });
 
 Route::group([

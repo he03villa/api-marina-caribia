@@ -23,6 +23,7 @@ class BoletaServicio extends Model
         'observaciones',
         'moto_nave',
         'estado',
+        'facturacion',
     ];
 
     public function destinos(){
