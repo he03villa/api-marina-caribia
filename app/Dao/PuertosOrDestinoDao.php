@@ -3,7 +3,7 @@
 namespace App\Dao;
 use App\Models\PuertoOrDestino;
 
-class PuertoOrDestinoDao {
+class PuertosOrDestinoDao {
 
     public function __construct() {
         // Constructor logic (opcional)
@@ -71,5 +71,31 @@ class PuertoOrDestinoDao {
     public function getPuertoOrDestinoActivas()
     {
         return PuertoOrDestino::where('estado', 'Activo')->get();
+    }
+
+    public function getPuertoServicio($id) {
+        $servicios = $this->getPuertoOrDestino($id)->servicios ?? [];
+        return $servicios;
+    }
+
+    public function getPuertoDestinoFiltro($filter) {
+        $buscar = "";
+        if ($filter) {
+            $buscar = $filter['buscar'] ?? "";
+        }
+        $destinos = PuertoOrDestino::query();
+        if ($buscar) {
+            $destinos = $destinos->where('nombre', 'like', '%' . $buscar . '%')
+                                ->orWhere('id_puerto_or_destino', 'like', '%' . $buscar . '%');
+        }
+        $destinos = $destinos->where('estado', 'Activo')->orderBy('id', 'desc')->with('concepto_servicios', 'servicios')->get();
+        return $destinos;
+    }
+
+    public function updateServicios($id, $servicios) {
+        $puertoOrDestino = PuertoOrDestino::find($id);
+        $puertoOrDestino->servicios()->sync($servicios['servicios']);
+        $puertoOrDestino = PuertoOrDestino::with('concepto_servicios', 'servicios')->find($id);
+        return $puertoOrDestino;
     }
 }

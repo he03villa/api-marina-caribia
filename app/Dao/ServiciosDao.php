@@ -20,7 +20,9 @@ class ServiciosDao {
      * @return Servicios|null The Servicios object if found, otherwise null.
      */
     public function getById($id) {
-        return Servicios::find($id);
+        $servicios = Servicios::with('concepto_servicios')->find($id);
+        $servicios['codigo'] = $servicios->id_servicio;
+        return $servicios;
     }
 
     /**
@@ -30,7 +32,7 @@ class ServiciosDao {
      * @return Servicios The created Servicios object.
      */
     public function create($data) {
-        return Servicios::create($data);
+        return Servicios::create($data)->concepto_servicios()->createMany($data['concepto_servicios']);
     }
 
     /**
@@ -43,6 +45,13 @@ class ServiciosDao {
     public function update($id, $data) {
         $servicio = Servicios::find($id);
         $servicio->update($data);
+        foreach ($data['concepto_servicios'] as $concepto_servicio) {
+            if (isset($concepto_servicio['id'])) {
+                $servicio->concepto_servicios()->find($concepto_servicio['id'])->update($concepto_servicio);
+            } else {
+                $servicio->concepto_servicios()->create($concepto_servicio);
+            }
+        }
         return $servicio;
     }
 
@@ -65,5 +74,19 @@ class ServiciosDao {
      */
     public function getServiciosActivos() {
         return Servicios::where('estado', 'Activo')->get();
+    }
+
+    public function getServiciosFilter($filter) {
+        $buscar = "";
+        if ($filter) {
+            $buscar = $filter['buscar'] ?? "";
+        }
+        $servicio = Servicios::query();
+        if ($buscar) {
+            $servicio = $servicio->where('nombre', 'like', '%' . $buscar . '%')
+                                ->orWhere('id_servicio', 'like', '%' . $buscar . '%');
+        }
+        $servicio = $servicio->where('estado', 'Activo')->orderBy('id', 'desc')->with('concepto_servicios')->get();
+        return $servicio;
     }
 }

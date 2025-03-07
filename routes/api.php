@@ -3,8 +3,12 @@
 use App\Http\Controllers\BoletaServicioController;
 use App\Http\Controllers\CargosController;
 use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\FacturacionController;
 use App\Http\Controllers\LanchasController;
 use App\Http\Controllers\MotoNaveController;
+use App\Http\Controllers\PuertoOrDestinoController;
+use App\Http\Controllers\ServiciosController;
+use App\Http\Controllers\TarifasConceptoController;
 use App\Http\Controllers\TrabajadoresController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
@@ -34,6 +38,9 @@ Route::group([
     Route::post('/', [BoletaServicioController::class, 'save'])->middleware(['validarCrearBolanteServicio']);
     Route::put('/{id}', [BoletaServicioController::class, 'update'])->middleware(['validarCambioEstado']);
     Route::put('/{id}/facturacion', [BoletaServicioController::class, 'updateFacturacion'])->middleware(['validarCambioFacturacion']);
+    Route::delete('/{id}', [BoletaServicioController::class, 'delete']);
+    Route::get('/boteasIsNotFactures', [BoletaServicioController::class, 'getAllBoletasIsNotFactures']);
+    Route::get('/{id}', [BoletaServicioController::class, 'getBoletaServicio']);
 });
 
 Route::group([
@@ -85,6 +92,51 @@ Route::group([
    Route::get('/{id}', [TrabajadoresController::class, 'trabajador']);
    Route::post('/', [TrabajadoresController::class, 'createTrabajador'])->middleware(['validarCrearTrabajador']);
    Route::put('/{id}', [TrabajadoresController::class, 'updateTrabajador'])->middleware(['validarCrearTrabajador']);
+});
+
+Route::group([
+    'prefix' => 'tarifas_conceptos'
+], function () {
+    Route::get('/', [TarifasConceptoController::class, 'getAll']);
+    Route::get('/{id}', [TarifasConceptoController::class, 'get']);
+    Route::post('/', [TarifasConceptoController::class, 'create'])->middleware(['validarCrearTarifaConcepto']);
+    Route::put('/{id}', [TarifasConceptoController::class, 'update'])->middleware(['validarCrearTarifaConcepto']);
+    Route::delete('/{id}', [TarifasConceptoController::class, 'delete']);
+    Route::delete('/', [TarifasConceptoController::class, 'deleteAll']);
+    Route::post('/macibo', [TarifasConceptoController::class, 'macibo']);
+});
+
+Route::group([
+    'prefix' => 'puertos_or_destinos'
+], function () {
+    Route::get('/', [PuertoOrDestinoController::class, 'getPuertoDestinoFiltro']);
+    /* Route::get('/{id}', [TarifasController::class, 'get']);
+    Route::post('/', [TarifasController::class, 'create'])->middleware(['validarCrearTarifa']);
+    Route::put('/{id}', [TarifasController::class, 'update'])->middleware(['validarCrearTarifa']);
+    Route::delete('/{id}', [TarifasController::class, 'delete']); */
+    Route::put('/{id}/servicios', [PuertoOrDestinoController::class, 'updateServicios'])->middleware(['validarActualizarServicios']);
+    Route::get('/{id}/servicios', [PuertoOrDestinoController::class, 'puertoServicios']);
+});
+
+Route::group([
+    'prefix' => 'facturas'
+], function () {
+    Route::get('/', [FacturacionController::class, 'index']);
+    Route::get('/{id}', [FacturacionController::class, 'get']);
+    Route::post('/', [FacturacionController::class, 'create'])->middleware(['validarCrearFactura']);
+    Route::put('/{id}', [FacturacionController::class, 'update'])->middleware(['validarCrearFactura']);
+    Route::delete('/{id}', [FacturacionController::class, 'delete']);
+    Route::get('/{id}/export', [FacturacionController::class, 'exportCSV']);
+});
+
+Route::group([
+    'prefix' => 'servicios'
+], function () {
+    Route::get('/', [ServiciosController::class, 'getServiciosFiltro']);
+    Route::get('/{id}', [ServiciosController::class, 'show']);
+    Route::post('/', [ServiciosController::class, 'store'])->middleware(['validarCrearServicio']);
+    Route::put('/{id}', [ServiciosController::class, 'update'])->middleware(['validarCrearServicio']);
+    Route::delete('/{id}', [ServiciosController::class, 'destroy']);
 });
 
 Route::post('/login', [UserController::class, 'login'])->middleware(['validarLogin']);

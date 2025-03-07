@@ -27,7 +27,7 @@ class BoletaServicio extends Model
     ];
 
     public function destinos(){
-        return $this->belongsTo(PuertoOrDestino::class, 'destino');
+        return $this->belongsTo(PuertoOrDestino::class, 'destino')->with('servicios', 'concepto_servicios');
     }
 
     public function agencias(){
@@ -60,5 +60,9 @@ class BoletaServicio extends Model
         $fechaFin = date_create($this->order_date);
         $dias = date_diff($fechaInicio, $fechaFin);
         return $dias->days;
+    }
+
+    public function facturas(){
+        return $this->belongsTo(Facturas::class, 'id', 'boleta_servicio_id')->with('detalle');
     }
 }

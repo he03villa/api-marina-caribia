@@ -107,4 +107,13 @@ class BoletaServicioDao
         $boletaServicios = $boletaServicios->orderBy('fecha_inicio', 'desc')->orderBy('hora_inicio', 'desc')->get();
         return $boletaServicios;
     }
+
+    function getAllNotIsFactures() {
+        $lista = BoletaServicio::whereDoesntHave('facturas')->with('embarcaciones', 'destinos', 'pilotos', 'motonaves', 'servicios', 'agencias')->get();
+        $lista = $lista->map(function ($boleta) {
+            unset($boleta->destinos->servicios);
+            return $boleta;
+        });
+        return $lista;
+    }
 }

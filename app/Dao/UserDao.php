@@ -10,7 +10,7 @@ class UserDao {
  * @return \Illuminate\Database\Eloquent\Collection|User[]
  */
     function getAll() {
-        return User::all();
+        return User::where('perfil', '!=', 'super_admin')->get();
     }
 
     /**

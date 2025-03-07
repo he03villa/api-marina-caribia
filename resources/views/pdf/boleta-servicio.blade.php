@@ -77,7 +77,8 @@
             margin: 20px 0;
         }
         .content-image img {
-            width: 100px;
+            width: 70px;
+            height: 45px;
             display: table-cell;
             vertical-align: middle; /* Alineación vertical */
             padding: 5px;
@@ -126,7 +127,7 @@
         </p>
         <div class="content-image">
             <img src="{{ public_path('images/logo-basc-transp-color.png') }}" alt="">
-            <img src="{{ public_path('images/vigilado-supertransporte_orig.png') }}" alt="">
+            <img src="{{ public_path('images/vigilado-supertransporte_orig.jpg') }}" alt="" style="width: 120px;">
             <img src="{{ public_path('images/logo-iso-45001_1.png') }}" alt="">
             <img src="{{ public_path('images/logo-iso-9001_1.png') }}" alt="">
             <img src="{{ public_path('images/logo-iso-14001_1.png') }}" alt="">

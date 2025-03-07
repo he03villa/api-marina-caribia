@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Dao\AgenciasDao;
 use App\Dao\BoletaServicioDao;
+use App\Dao\Concepto_serviciosDao;
+use App\Dao\GeneralDao;
 use App\Dao\LanchasDao;
 use App\Dao\MotoNavesDao;
 use App\Dao\PilotosDao;
@@ -26,6 +28,8 @@ class BoletaServicioController extends Controller
     protected $_ServiciosDao;
     protected $_BoletaServicioDao;
     protected $_TrabajadoresDao;
+    protected $_GeneralDao;
+    protected $_Concepto_serviciosDao;
 
     /**
      * Inicializa los objetos de acceso a datos necesarios para
@@ -38,7 +42,7 @@ class BoletaServicioController extends Controller
      * @param ServiciosDao $ServiciosDao
      * @param BoletaServicioDao $BoletaServicioDao
      */
-    public function __construct(AgenciasDao $AgenciasDao, LanchasDao $LanchasDao, MotoNavesDao $MotoNavesDao, PilotosDao $PilotosDao, ServiciosDao $ServiciosDao, BoletaServicioDao $BoletaServicioDao, TrabajadoresDao $TrabajadoresDao)
+    public function __construct(AgenciasDao $AgenciasDao, LanchasDao $LanchasDao, MotoNavesDao $MotoNavesDao, PilotosDao $PilotosDao, ServiciosDao $ServiciosDao, BoletaServicioDao $BoletaServicioDao, TrabajadoresDao $TrabajadoresDao, GeneralDao $GeneralDao, Concepto_serviciosDao $Concepto_serviciosDao)
     {
         $this->_AgenciasDao = $AgenciasDao;
         $this->_LanchasDao = $LanchasDao;
@@ -47,6 +51,8 @@ class BoletaServicioController extends Controller
         $this->_ServiciosDao = $ServiciosDao;
         $this->_BoletaServicioDao = $BoletaServicioDao;
         $this->_TrabajadoresDao = $TrabajadoresDao;
+        $this->_GeneralDao = $GeneralDao;
+        $this->_Concepto_serviciosDao = $Concepto_serviciosDao;
     }
 
     /**
@@ -193,4 +199,24 @@ class BoletaServicioController extends Controller
         return response()->json($boleta, 200);
     }
     
+    function delete($id){
+        $this->_BoletaServicioDao->deleteBoletaServicio($id);
+        return response()->json(['message' => 'Boleta de servicio eliminada'], 200);
+    }
+
+    function getBoletaServicio($id) {
+        $boleta = $this->_BoletaServicioDao->getBoletaServicio($id);
+        return response()->json($boleta, 200);
+    }
+
+    function getAllBoletasIsNotFactures() {
+        $boletas = $this->_BoletaServicioDao->getAllNotIsFactures();
+        $conceptos = $this->_Concepto_serviciosDao->getAll();
+        $data = [
+            'boletas' => $boletas,
+            'ms' => $this->_GeneralDao->getGeneralByName('SM')->value ?? 0,
+            'conceptos' => $conceptos
+        ];
+        return response()->json($data, 200);
+    }
 }
