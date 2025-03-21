@@ -3,6 +3,7 @@
 use App\Http\Controllers\BoletaServicioController;
 use App\Http\Controllers\CargosController;
 use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\ConseptoServiciosController;
 use App\Http\Controllers\FacturacionController;
 use App\Http\Controllers\LanchasController;
 use App\Http\Controllers\MotoNaveController;
@@ -137,6 +138,13 @@ Route::group([
     Route::post('/', [ServiciosController::class, 'store'])->middleware(['validarCrearServicio']);
     Route::put('/{id}', [ServiciosController::class, 'update'])->middleware(['validarCrearServicio']);
     Route::delete('/{id}', [ServiciosController::class, 'destroy']);
+});
+
+Route::group([
+    'prefix' => 'conceptos'
+], function () {
+    Route::get('/', [ConseptoServiciosController::class, 'index']);
+    Route::post('/', [ConseptoServiciosController::class, 'store']);
 });
 
 Route::post('/login', [UserController::class, 'login'])->middleware(['validarLogin']);

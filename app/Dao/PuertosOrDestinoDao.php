@@ -25,7 +25,7 @@ class PuertosOrDestinoDao {
      * @return PuertoOrDestino|null
      */
     public function getPuertoOrDestino($id) {
-        return PuertoOrDestino::find($id);
+        return PuertoOrDestino::with('concepto_servicios', 'servicios')->find($id);
     }
 
     /**
