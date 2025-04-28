@@ -27,4 +27,8 @@ class Facturas extends Model
     function boleta() {
         return $this->belongsTo(BoletaServicio::class, 'boleta_servicio_id')->with('servicios', 'agencias', 'destinos', 'embarcaciones', 'motonaves');
     }
+
+    function boletas() {
+        return $this->belongsToMany(BoletaServicio::class, 'factura_boleta_servicio', 'factura_id', 'boleta_servicio_id')->with('servicios', 'agencias', 'destinos', 'embarcaciones', 'motonaves');
+    }
 }

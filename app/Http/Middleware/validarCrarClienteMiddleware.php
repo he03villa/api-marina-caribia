@@ -18,7 +18,7 @@ class validarCrarClienteMiddleware
     {
         $validator = Validator::make($request->all(), [
             'nombre' => 'required',
-            'codigo' => 'required',
+            'id_agencia' => 'required',
             'estado' => 'required',
         ], [
             'required' => 'El :attribute es requerido.',

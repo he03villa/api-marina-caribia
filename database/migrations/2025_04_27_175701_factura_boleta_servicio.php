@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Facturas;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -12,13 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('facturas', function (Blueprint $table) {
-            $table->id();
-            $table->longText('numero_factura');
+        //
+        Schema::create('factura_boleta_servicio', function (Blueprint $table) {
             $table->foreignId('boleta_servicio_id')->nullable()->constrained()->onDelete('cascade');
-            $table->double('total', 12, 2)->default(0);
-            $table->enum('estado', [Facturas::PAGADA, FacturaS::PENDIENTE, FacturaS::CANCELADA])->default(FacturaS::PENDIENTE);
-            $table->timestamps();
+            $table->foreignId('factura_id')->nullable()->constrained()->onDelete('cascade');
         });
     }
 
@@ -27,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('facturas');
+        //
     }
 };

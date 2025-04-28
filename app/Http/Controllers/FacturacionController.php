@@ -36,6 +36,8 @@ class FacturacionController extends Controller
     public function create(Request $request) {
         $req = $request->all();
         $req['numero_factura'] = $this->generarNumeroFacturaUUID();
+        $req['boleta'] = $req['boleta_servicio_id'];
+        unset($req['boleta_servicio_id']);
         $factura = $this->FacturacionDao->create($req);
         return response()->json($factura, 201);
     }

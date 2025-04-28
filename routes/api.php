@@ -145,6 +145,7 @@ Route::group([
 ], function () {
     Route::get('/', [ConseptoServiciosController::class, 'index']);
     Route::post('/', [ConseptoServiciosController::class, 'store']);
+    Route::post('/cliente', [ConseptoServiciosController::class, 'storeCliente']);
 });
 
 Route::post('/login', [UserController::class, 'login'])->middleware(['validarLogin']);

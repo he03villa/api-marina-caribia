@@ -47,7 +47,7 @@ class FacturacionDao {
             $fechaFinal = Carbon::parse($fechaFinal)->endOfDay();
             $factura = $factura->whereBetween('created_at', [$fechaInicio, $fechaFinal]);
         }
-        $factura = $factura->with('detalle', 'boleta')->orderBy('id', 'desc')->get();
+        $factura = $factura->with('detalle', 'boleta', 'boletas')->orderBy('id', 'desc')->get();
         return $factura;
     }
 
@@ -56,7 +56,10 @@ class FacturacionDao {
     }
 
     public function create($data) {
-        return Facturas::create($data)->detalle()->createMany($data['detalles']);
+        $factura = Facturas::create($data);
+        $factura->detalle()->createMany($data['detalles']);
+        $factura->boletas()->sync($data['boleta']);
+        return $factura;
     }
 
     public function update($id, $data) {

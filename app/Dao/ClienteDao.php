@@ -12,7 +12,7 @@ class ClienteDao
 
     public function getCliente($id)
     {
-        return Cliente::find($id);
+        return Cliente::with('concepto_servicios')->find($id);
     }
 
     public function createCliente($data)
@@ -50,7 +50,21 @@ class ClienteDao
                 ->orWhere('tarifa', 'like', '%' . $buscar . '%')
                 ->orWhere('estado', 'like', '%' . $buscar . '%');
         }
-        $clientes = $clientes->orderBy('id', 'desc')->get();
+        $clientes = $clientes->with('concepto_servicios')->orderBy('id', 'desc')->get();
         return $clientes;
     }
+
+    public function saveTarifas($data)
+    {
+        $cliente = $this->getCliente($data['cliente_id']);
+
+        $cliente->concepto_servicios()->syncWithoutDetaching([
+            $data['concepto_servicio_id'] => [
+                'tarifa' => $data['tarifa'],
+            ],
+        ]);
+
+        return $this->getCliente($data['cliente_id']);
+    }
+
 }

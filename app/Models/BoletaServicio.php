@@ -31,7 +31,7 @@ class BoletaServicio extends Model
     }
 
     public function agencias(){
-        return $this->belongsTo(Agencias::class, 'agencia');
+        return $this->belongsTo(Agencias::class, 'agencia')->with('concepto_servicios');
     }
     
     public function embarcaciones(){

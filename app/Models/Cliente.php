@@ -17,4 +17,9 @@ class Cliente extends Model
         'tarifa',
         'estado',
     ];
+
+    public function concepto_servicios(){
+        return $this->belongsToMany(Concepto_servicios::class, 'tarifas_conceptos_cliente', 'cliente_id', 'concepto_servicio_id')
+                    ->withPivot('tarifa', 'id');
+    }
 }
