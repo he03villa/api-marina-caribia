@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Dao\FacturacionDao;
+use App\Exports\FacturaExport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
 
 class FacturacionController extends Controller
 {
@@ -59,72 +61,61 @@ class FacturacionController extends Controller
 
     public function exportCSV($id)
     {
-        $fileName = 'facturas_' . now()->format('Y-m-d') . '.csv';
+        $fileName = 'facturas_' . now()->format('Y-m-d') . '.xlsx';
+
         $headers = [
-            "Content-Type" => "text/csv",
-            "Content-Disposition" => "attachment; filename=$fileName",
+            'Cliente', 
+            'Razon Social', 
+            'Concepto', 
+            'Nombre', 
+            'Descripcion', 
+            'Documento', 
+            'Cantidad', 
+            'ValorUnitario', 
+            'PorcentajeDescuento', 
+            'ProcentajeIVA', 
+            'TasaCambio', 
+            'TipoFactura', 
+            'NumeroFactura', 
+            'Vencimiento', 
+            'Referencia', 
+            'Proveedor', 
+            'CambioEnIVAyBase',
+            'NumeroValorIVA',
+            'CambioEnIVAyBase',
+            'NumeroValorIVA',
+            'NumeroValorBase',
         ];
 
         $facturas = $this->FacturacionDao->get($id);
 
-        $callback = function () use ($facturas) {
-            $file = fopen('php://output', 'w');
+        $data = $facturas->detalle->map(function ($detalle) use ($facturas) {
+            return [
+                ($facturas->boleta ? $facturas->boleta->agencias->id_agencia : $facturas->boletas->first()->agencias->id_agencia),
+                '',
+                $detalle->concepto->codigo,
+                '',
+                $detalle->concepto->descripcion,
+                '0000000000',
+                $detalle->cantidad,
+                $detalle->valor_unitario,
+                $facturas->descuento,
+                0,
+                0,
+                'FA',
+                0,
+                '',
+                '',
+                '',
+                'N',
+                '0',
+                '0',
+                '',
+                ''
+            ];
+        });
 
-            // Escribe los encabezados
-            fputcsv($file, ['Cliente', 
-                           'Razon Social', 
-                           'Concepto', 
-                           'Nombre', 
-                           'Descripcion', 
-                           'Documento', 
-                           'Cantidad', 
-                           'ValorUnitario', 
-                           'PorcentajeDescuento', 
-                           'ProcentajeIVA', 
-                           'TasaCambio', 
-                           'TipoFactura', 
-                           'NumeroFactura', 
-                           'Vencimiento', 
-                           'Referencia', 
-                           'Proveedor', 
-                           'CambioEnIVAyBase',
-                           'NumeroValorIVA',
-                           'CambioEnIVAyBase',
-                           'NumeroValorIVA',
-                           'NumeroValorBase',
-                        ]);
-
-            // Escribe los datos
-            foreach ($facturas->detalle as $detalle) {
-                fputcsv($file, [
-                    $facturas->boleta->agencias->id_agencia,
-                    '',
-                    $detalle->concepto->codigo,
-                    '',
-                    $detalle->concepto->descripcion,
-                    '0000000000',
-                    $detalle->cantidad,
-                    $detalle->valor_unitario,
-                    0,
-                    0,
-                    0,
-                    'FA',
-                    0,
-                    '',
-                    '',
-                    '',
-                    'N',
-                    '0',
-                    '0',
-                    '',
-                    ''
-                ]);
-            }
-
-            fclose($file);
-        };
-
-        return response()->stream($callback, 200, $headers);
+        return Excel::download(new FacturaExport($data, $headers), $fileName);
     }
 
     

@@ -43,7 +43,7 @@ class BoletaServicio extends Model
     }
 
     public function servicios(){
-        return $this->belongsTo(Servicios::class, 'servicio');
+        return $this->belongsTo(Servicios::class, 'servicio')->with('concepto_servicios');
     }
 
     public function motonaves(){
@@ -63,6 +63,6 @@ class BoletaServicio extends Model
     }
 
     public function facturas(){
-        return $this->belongsTo(Facturas::class, 'id', 'boleta_servicio_id')->with('detalle');
+        return $this->belongsToMany(Facturas::class, 'factura_boleta_servicio', 'boleta_servicio_id', 'factura_id')->with('detalles');
     }
 }

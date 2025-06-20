@@ -211,11 +211,10 @@ class BoletaServicioController extends Controller
 
     function getAllBoletasIsNotFactures() {
         $boletas = $this->_BoletaServicioDao->getAllNotIsFactures();
-        $conceptos = $this->_Concepto_serviciosDao->getAll();
+        //$conceptos = $this->_Concepto_serviciosDao->getAll();
         $data = [
             'boletas' => $boletas,
-            'ms' => $this->_GeneralDao->getGeneralByName('SM')->value ?? 0,
-            'conceptos' => $conceptos
+            'ms' => $this->_GeneralDao->getGeneralByName('SM')->value ?? 0
         ];
         return response()->json($data, 200);
     }

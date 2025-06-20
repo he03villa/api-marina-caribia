@@ -18,7 +18,10 @@ class Facturas extends Model
         'numero_factura',
         'total',
         'estado',
+        'descuento',
     ];
+
+    protected $appends = ['total_label'];
 
     function detalle() {
         return $this->hasMany(FacturasDetalles::class)->with('concepto');
@@ -30,5 +33,9 @@ class Facturas extends Model
 
     function boletas() {
         return $this->belongsToMany(BoletaServicio::class, 'factura_boleta_servicio', 'factura_id', 'boleta_servicio_id')->with('servicios', 'agencias', 'destinos', 'embarcaciones', 'motonaves');
+    }
+
+    function getTotalLabelAttribute() {
+        return $this->total - ($this->total * ($this->descuento / 100));
     }
 }
