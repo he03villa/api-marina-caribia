@@ -11,10 +11,24 @@ RUN apt-get update && apt-get install -y \
     unzip \
     git \
     procps \
+    tesseract-ocr \
+    tesseract-ocr-eng \
+    tesseract-ocr-spa \
+    poppler-utils \
+    ghostscript \
+    imagemagick \
+    libmagickwand-dev \
+    && pecl install imagick \
+    && docker-php-ext-enable imagick \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) gd pdo pdo_mysql zip pcntl \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
+
+# Modificar la política de seguridad de ImageMagick para permitir PDF
+RUN sed -i '/<policy domain="coder" rights="none" pattern="PDF" \/>/d' /etc/ImageMagick-6/policy.xml \
+    && sed -i 's/rights="none"/rights="read|write"/g' /etc/ImageMagick-6/policy.xml \
+    && echo '<policy domain="coder" rights="read|write" pattern="PDF" />' >> /etc/ImageMagick-6/policy.xml
 
 # Instalar Composer de forma segura (con verificación)
 RUN curl -sS https://getcomposer.org/installer | php -- \

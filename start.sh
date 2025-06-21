@@ -7,8 +7,8 @@ composer install
 
 # Iniciar servicios en segundo plano
 php artisan serve --host=0.0.0.0 --port=8003 &
-php artisan reverb:start --host=0.0.0.0 --port=8004 &
-php artisan queue:work &
+# php artisan reverb:start --host=0.0.0.0 --port=8004 &
+# php artisan queue:work &
 
 # Mantener el contenedor en ejecución usando sleep infinity en lugar de tail
 echo "Todos los servicios se han iniciado"

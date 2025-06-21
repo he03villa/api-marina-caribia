@@ -7,6 +7,7 @@ use App\Http\Controllers\ConseptoServiciosController;
 use App\Http\Controllers\FacturacionController;
 use App\Http\Controllers\LanchasController;
 use App\Http\Controllers\MotoNaveController;
+use App\Http\Controllers\OcrController;
 use App\Http\Controllers\PuertoOrDestinoController;
 use App\Http\Controllers\ServiciosController;
 use App\Http\Controllers\TarifasConceptoController;
@@ -149,3 +150,5 @@ Route::group([
 });
 
 Route::post('/login', [UserController::class, 'login'])->middleware(['validarLogin']);
+
+Route::post('/ocr', [OcrController::class, 'processFile']);
